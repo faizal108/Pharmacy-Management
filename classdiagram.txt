@@ -1,0 +1,105 @@
+: Class Diagram details : 
+
+MEDICINE_BUY
+id  : Long
+company_id : long
+amount : double
+paystatus : String
+personName :String
+Description : String
+Date : LocalDate
+---------------------
+findByCompanyId()
+findByPersonname()
+findByDate()
+sortByPayStatus()
+
+
+
+:Medicine-Sell:
+id : long
+med_id : long
+customer_id : long
+quantity : int
+amount : double
+price : double
+date : LocalDate
+-------------------
+findByMedicineId()
+findByCustomerId()
+findByDate()
+
+
+
+: Company :
+Id : long
+name : String
+email : String
+phone : String
+address : String
+status : String
+creationDate : LocalDate
+modifiedDate : LocalDate
+----------------------
+addCompany()
+updateCompany()
+deleteCompany()
+getAllCompany()
+findCompanyById()
+changeStatus()
+sortByCreationDate()
+sortByStatus()
+
+
+: Medicine :
+id : long
+company_id : long
+category : String
+name : String
+buyingPrice : double
+SellingPrice : double
+quantity : int
+date : LocalDate
+expDate : LocalDate
+---------------------
+addCompany()
+updateCompany() 
+deleteCompany()
+getAllCompany()
+findCompanyById()
+/* comapany = medicine */
+findMedicineBYName()
+sortByCategory()
+sortBYDate()
+getAllExpireMedicine()
+getAllExpireInMonthMed...()
+getAllLowStockmedicine()
+UpdateStockLimit()
+
+: customer :
+id : long
+name : String
+amount : double
+gender : String
+contact : String
+Date : LocalDate
+-----------------
+addCustomer()
+DeleteCustomer()
+updateCustomer()
+findCustomerById()
+findCustomerByContact()
+getAllCustomer()
+sortByDate()
+sortByName()
+
+: chemist : 
+id :long
+name : string
+age : int
+gender : String
+----------------
+manageMedicine()
+manageCompany()
+managePurchase()
+manageSell()

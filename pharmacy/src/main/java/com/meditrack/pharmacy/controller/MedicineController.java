@@ -81,4 +81,9 @@ public class MedicineController {
     public ResponseEntity<List<Medicine>> getExpireMedicinesByMonth(@PathVariable int month){
         return ResponseEntity.ok(medicineService.getExipreMedicineByMonth(month));
     }
+
+    @GetMapping("/expired")
+    public ResponseEntity<List<Medicine>> getExpiredMedicine(){
+        return ResponseEntity.ok(medicineService.getExpireMedicine());
+    }
 }
