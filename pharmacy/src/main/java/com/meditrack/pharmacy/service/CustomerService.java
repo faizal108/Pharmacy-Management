@@ -14,4 +14,6 @@ public interface CustomerService {
     Customer updateCustomer(Long id, Customer updatedCustomer);
 
     boolean deleteCustomer(Long id);
+
+    List<Customer> getAllCustomerByMedicine(Long medicineid);
 }

@@ -9,4 +9,10 @@ public interface MedicineBuyService {
     List<MedicineBuy> getAllBuyedMedicines();
 
     MedicineBuy addMedicinePurchase(MedicineBuy medicineBuy);
+
+    MedicineBuy getRecordById(Long id);
+
+    List<MedicineBuy> getAllPaidRecord();
+
+    List<MedicineBuy> getAllNotPaidRecord();
 }
