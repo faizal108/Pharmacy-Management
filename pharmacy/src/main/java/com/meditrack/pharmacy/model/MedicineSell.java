@@ -1,8 +1,6 @@
 package com.meditrack.pharmacy.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CurrentTimestamp;
-import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDate;
 
@@ -12,16 +10,14 @@ public class MedicineSell {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sellID;
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customerID")
     private Customer customer;
-
     @ManyToOne
-    @JoinColumn(name = "medicine_id")
+    @JoinColumn(name = "medicineID")
     private Medicine medicine;
     private Integer quantity;
-    private Double amount;
-    @CurrentTimestamp
-    private LocalDate date;
+    private Double totalAmount;
+    private LocalDate purchaseDate;
 
     public Long getSellID() {
         return sellID;
@@ -55,19 +51,19 @@ public class MedicineSell {
         this.quantity = quantity;
     }
 
-    public Double getAmount() {
-        return amount;
+    public Double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getPurchaseDate() {
+        return purchaseDate;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setPurchaseDate(LocalDate purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 }

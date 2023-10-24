@@ -10,15 +10,12 @@ import java.util.List;
 
 @Repository
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
-    @Query("SELECT m FROM Medicine AS m WHERE m.quantity <= :threshold")
+    @Query("SELECT m FROM Medicine AS m WHERE m.stockQuantity <= :threshold")
     List<Medicine> findMedicineByThreshold(@Param("threshold") int threshold);
 
-    @Query("SELECT m FROM Medicine AS m WHERE DATEDIFF(m.expirationDate,CURRENT_DATE) BETWEEN 0 AND 30")
+    @Query("SELECT m FROM Medicine AS m WHERE DATEDIFF(m.expirationDate,CURRENT_DATE) <= 30")
     List<Medicine> findMedicineNearToExpireInMonth();
 
     @Query("SELECT m FROM Medicine AS m WHERE FUNCTION('MONTH',m.expirationDate) = :month")
     List<Medicine> getExpireMedicinesInMonth(@Param("month") int month);
-
-    @Query("SELECT m FROM Medicine AS m WHERE m.expirationDate < CURDATE()")
-    List<Medicine> findExpireMedicine();
 }

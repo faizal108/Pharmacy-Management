@@ -16,9 +16,6 @@ public class CustomerController {
 
     @PostMapping("/add")
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
-        if(customerService.addCustomer(customer) == null){
-            return ResponseEntity.accepted().build();
-        }
         return ResponseEntity.ok(customerService.addCustomer(customer));
     }
 
@@ -51,11 +48,6 @@ public class CustomerController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
-    }
-
-    @GetMapping("/getcustomer/{medicineid}")
-    public ResponseEntity<List<Customer>> getAllCustomerByMedicine(@PathVariable Long medicineid){
-        return ResponseEntity.ok(customerService.getAllCustomerByMedicine(medicineid));
     }
 
 }

@@ -82,8 +82,13 @@ public class MedicineController {
         return ResponseEntity.ok(medicineService.getExipreMedicineByMonth(month));
     }
 
-    @GetMapping("/expired")
-    public ResponseEntity<List<Medicine>> getExpiredMedicine(){
-        return ResponseEntity.ok(medicineService.getExpireMedicine());
+    @PutMapping("/stockupdate/{id}/{stockIncreasedBy}")
+    public ResponseEntity<Medicine> updateStockById(@PathVariable Long id,@PathVariable int stockIncreasedBy){
+        Medicine modifiedMedicine = medicineService.updateStockById(id, stockIncreasedBy);
+        if(modifiedMedicine == null){
+            ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(modifiedMedicine);
     }
 }
