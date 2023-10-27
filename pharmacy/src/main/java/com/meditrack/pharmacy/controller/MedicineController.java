@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/medicines")
+@CrossOrigin
 public class MedicineController {
     @Autowired
     private MedicineService medicineService;
@@ -82,13 +83,8 @@ public class MedicineController {
         return ResponseEntity.ok(medicineService.getExipreMedicineByMonth(month));
     }
 
-    @PutMapping("/stockupdate/{id}/{stockIncreasedBy}")
-    public ResponseEntity<Medicine> updateStockById(@PathVariable Long id,@PathVariable int stockIncreasedBy){
-        Medicine modifiedMedicine = medicineService.updateStockById(id, stockIncreasedBy);
-        if(modifiedMedicine == null){
-            ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(modifiedMedicine);
+    @GetMapping("/expired")
+    public ResponseEntity<List<Medicine>> getExpiredMedicine(){
+        return ResponseEntity.ok(medicineService.getExpireMedicine());
     }
 }

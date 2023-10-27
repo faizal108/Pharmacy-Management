@@ -1,13 +1,13 @@
 const loginFields=[
     {
-        labelText:"Email address",
-        labelFor:"email-address",
-        id:"email-address",
-        name:"email",
-        type:"email",
-        autoComplete:"email",
+        labelText:"Phone",
+        labelFor:"phone",
+        id:"phone",
+        name:"phone",
+        type:"phone",
+        autoComplete:"phone",
         isRequired:true,
-        placeholder:"Email address"   
+        placeholder:"Phone"   
     },
     {
         labelText:"Password",
@@ -18,6 +18,16 @@ const loginFields=[
         autoComplete:"current-password",
         isRequired:true,
         placeholder:"Password"   
+    },
+    {
+        labelText:"Role",
+        labelFor:"role",
+        id:"role",
+        name:"role",
+        type:"text",
+        autoComplete:"role",
+        isRequired:true,
+        placeholder:"Role"   
     }
 ]
 
@@ -33,14 +43,14 @@ const signupFields=[
         placeholder:"Username"   
     },
     {
-        labelText:"Email address",
-        labelFor:"email-address",
-        id:"email-address",
-        name:"email",
-        type:"email",
-        autoComplete:"email",
+        labelText:"Phone",
+        labelFor:"phone",
+        id:"phone",
+        name:"phone",
+        type:"phone",
+        autoComplete:"phone",
         isRequired:true,
-        placeholder:"Email address"   
+        placeholder:"Phone"   
     },
     {
         labelText:"Password",
@@ -53,14 +63,14 @@ const signupFields=[
         placeholder:"Password"   
     },
     {
-        labelText:"Confirm Password",
-        labelFor:"confirm-password",
-        id:"confirm-password",
-        name:"confirm-password",
-        type:"password",
-        autoComplete:"confirm-password",
+        labelText:"Role",
+        labelFor:"role",
+        id:"role",
+        name:"role",
+        type:"text",
+        autoComplete:"role",
         isRequired:true,
-        placeholder:"Confirm Password"   
+        placeholder:"Role"   
     }
 ]
 

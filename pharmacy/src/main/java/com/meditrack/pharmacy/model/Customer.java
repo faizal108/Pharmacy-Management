@@ -1,6 +1,9 @@
 package com.meditrack.pharmacy.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CurrentTimestamp;
+
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -9,10 +12,13 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerID;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String phone;
-    private String address;
+    private String gender;
+    @CurrentTimestamp
+    private LocalDate localDate;
+    @CurrentTimestamp
+    private LocalDate modifiedDate;
 
     public Long getCustomerID() {
         return customerID;
@@ -22,20 +28,12 @@ public class Customer {
         this.customerID = customerID;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhone() {
@@ -46,11 +44,28 @@ public class Customer {
         this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
+    public String getGender() {
+        return gender;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+    }
+
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

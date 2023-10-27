@@ -8,4 +8,6 @@ import java.util.List;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    boolean existsByNameAndPhone(String name, String phone);
+    Customer findByNameAndPhone(String name, String phone);
 }

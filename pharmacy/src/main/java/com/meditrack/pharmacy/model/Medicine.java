@@ -1,6 +1,9 @@
 package com.meditrack.pharmacy.model;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+import org.hibernate.annotations.CurrentTimestamp;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,8 +14,14 @@ public class Medicine {
     private Long medicineID;
     private String medicineName;
     private String category;
-    private Integer price;
-    private Integer stockQuantity;
+    private Integer quantity;
+    private Double buyingPrice;
+    private Double sellingPrice;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+    @CurrentTimestamp
+    private LocalDate BuyingDate;
     private LocalDate expirationDate;
 
     public Long getMedicineID() {
@@ -39,20 +48,36 @@ public class Medicine {
         this.category = category;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
+    public Double getBuyingPrice() {
+        return buyingPrice;
     }
 
-    public void setStockQuantity(Integer stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public void setBuyingPrice(Double buyingPrice) {
+        this.buyingPrice = buyingPrice;
+    }
+
+    public Double getSellingPrice() {
+        return sellingPrice;
+    }
+
+    public void setSellingPrice(Double sellingPrice) {
+        this.sellingPrice = sellingPrice;
+    }
+
+    public LocalDate getBuyingDate() {
+        return BuyingDate;
+    }
+
+    public void setBuyingDate(LocalDate buyingDate) {
+        BuyingDate = buyingDate;
     }
 
     public LocalDate getExpirationDate() {
@@ -61,5 +86,13 @@ public class Medicine {
 
     public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }

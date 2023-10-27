@@ -17,10 +17,9 @@ public interface MedicineService {
     boolean deleteMedicine(Long id);
 
     List<Medicine> getLowStockMedicines(int threshold);
-
     List<Medicine> getExpireWarningInMonth();
 
     List<Medicine> getExipreMedicineByMonth(int month);
 
-    Medicine updateStockById(Long id,int StockIncreaseBy);
+    List<Medicine> getExpireMedicine();
 }

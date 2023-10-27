@@ -1,7 +1,10 @@
 package com.meditrack.pharmacy.service;
 
+import com.meditrack.pharmacy.model.Company;
 import com.meditrack.pharmacy.model.Medicine;
+import com.meditrack.pharmacy.repository.CompanyRepository;
 import com.meditrack.pharmacy.repository.MedicineRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,18 @@ public class MedicineServiceImpl implements MedicineService {
     @Autowired
     private MedicineRepository medicineRepository;
 
+    @Autowired
+    private CompanyRepository companyRepository;
+
 
     @Override
     public Medicine addMedicine(Medicine medicine) {
+
+        Company company = companyRepository.findById(medicine.getCompany().getCompanyID()).orElse(null);
+        if(company == null){
+            throw new EntityNotFoundException("Company Not Found");
+        }
+        medicine.setCompany(company);
         return medicineRepository.save(medicine);
     }
 
@@ -35,9 +47,11 @@ public class MedicineServiceImpl implements MedicineService {
         if(currentMedicine != null){
             currentMedicine.setMedicineName(updatedMedicine.getMedicineName());
             currentMedicine.setCategory(updatedMedicine.getCategory());
-            currentMedicine.setPrice(updatedMedicine.getPrice());
-            currentMedicine.setStockQuantity(updatedMedicine.getStockQuantity());
+            currentMedicine.setQuantity(updatedMedicine.getQuantity());
+            currentMedicine.setBuyingPrice(updatedMedicine.getBuyingPrice());
+            currentMedicine.setSellingPrice(updatedMedicine.getSellingPrice());
             currentMedicine.setExpirationDate(updatedMedicine.getExpirationDate());
+            currentMedicine.setCompany(updatedMedicine.getCompany());
             return medicineRepository.save(currentMedicine);
         }
         return null;
@@ -68,14 +82,8 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public Medicine updateStockById(Long id, int stockIncreaseBy) {
-        Medicine currMedicine = medicineRepository.findById(id).orElse(null);
-
-        if(currMedicine != null){
-            currMedicine.setStockQuantity(currMedicine.getStockQuantity()+stockIncreaseBy);
-            return medicineRepository.save(currMedicine);
-        }
-        return null;
+    public List<Medicine> getExpireMedicine() {
+        return medicineRepository.findExpireMedicine();
     }
 }
 

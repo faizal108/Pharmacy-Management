@@ -10,18 +10,16 @@ public class MedicineBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long buyID;
-    @ManyToOne()
-    @JoinColumn(name = "retailerID")
-    private Retailer retailer;
-    @ManyToOne()
-    @JoinColumn(name = "medicineID")
-    private Medicine medicine;
-    private Integer quantity;
-
-    private Double totalAmount;
-
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+    private String personName;
+    private Double amount;
+    private String payStatus;
+    private String description;
     @CurrentTimestamp
-    private LocalDate supplyDate;
+    private LocalDate date;
+
     public Long getBuyID() {
         return buyID;
     }
@@ -30,43 +28,51 @@ public class MedicineBuy {
         this.buyID = buyID;
     }
 
-    public Retailer getRetailer() {
-        return retailer;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setRetailer(Retailer retailer) {
-        this.retailer = retailer;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
-    public Medicine getMedicine() {
-        return medicine;
+    public String getPersonName() {
+        return personName;
     }
 
-    public void setMedicine(Medicine medicine) {
-        this.medicine = medicine;
+    public void setPersonName(String personName) {
+        this.personName = personName;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public String getPayStatus() {
+        return payStatus;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setPayStatus(String payStatus) {
+        this.payStatus = payStatus;
     }
 
-    public LocalDate getSupplyDate() {
-        return supplyDate;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSupplyDate(LocalDate supplyDate) {
-        this.supplyDate = supplyDate;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }
