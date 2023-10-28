@@ -30,12 +30,16 @@ const TABS = [
     value: "all",
   },
   {
-    label: "Monitored",
-    value: "monitored",
+    label: "Low Stock",
+    value: "low stock",
   },
   {
-    label: "Unmonitored",
-    value: "unmonitored",
+    label: "Expired",
+    value: "expired",
+  },
+  {
+    label: "Expired In Month",
+    value: "expired in month",
   },
 ];
 
@@ -57,8 +61,16 @@ export function MedicineTable() {
   const [open, setOpen] = useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
+  const medicineAdded = (med) => {
+    const updatedData = [
+      ...tableData,
+      { ...med, company: med.company.companyName },
+    ];
+    setTableData(updatedData);
+  };
 
   useEffect(() => {
+    console.log("table-data : " + tableData.length);
     axios
       .get("http://localhost:8080/api/medicines")
       .then((response) => {
@@ -76,11 +88,15 @@ export function MedicineTable() {
   return (
     <>
       <Card className="h-full w-11/12">
-        <CardHeader floated={false} shadow={false} className="rounded-none">
+        <CardHeader
+          floated={false}
+          shadow={false}
+          className="relative  h-48 bg-clip-border bg-white text-gray-700 rounded-none m-0 p-4"
+        >
           <div className="mb-8 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
-                Members list
+                Medicines List
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
                 See information about all medicine.
@@ -90,7 +106,11 @@ export function MedicineTable() {
               <Button variant="outlined" size="sm">
                 view all
               </Button>
-              <Button className="flex items-center gap-3" size="sm" onClick={openDrawer}>
+              <Button
+                className="flex items-center gap-3"
+                size="sm"
+                onClick={openDrawer}
+              >
                 <PlusIcon strokeWidth={2} className="h-4 w-4" /> Add Medicine
               </Button>
             </div>
@@ -99,7 +119,7 @@ export function MedicineTable() {
             <Tabs value="all" className="w-full md:w-max">
               <TabsHeader>
                 {TABS.map(({ label, value }) => (
-                  <Tab key={value} value={value}>
+                  <Tab key={value} value={value} className="w-fit">
                     &nbsp;&nbsp;{label}&nbsp;&nbsp;
                   </Tab>
                 ))}
@@ -113,9 +133,9 @@ export function MedicineTable() {
             </div>
           </div>
         </CardHeader>
-        <CardBody className="overflow-scroll px-0">
-          <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
+        <CardBody className="overflow-scroll p-0 my-3 no-scrollbar">
+          <table className="w-full min-w-max table-auto text-left">
+            <thead className="sticky top-0">
               <tr>
                 {TABLE_HEAD.map((head, index) => (
                   <th
@@ -125,7 +145,7 @@ export function MedicineTable() {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
+                      className="flex items-center justify-between font-normal leading-none opacity-70"
                     >
                       {head}{" "}
                       {index !== TABLE_HEAD.length - 1 && (
@@ -139,124 +159,131 @@ export function MedicineTable() {
                 ))}
               </tr>
             </thead>
-            <tbody>
-              {tableData.map(
-                (
-                  {
-                    medicineID,
-                    category,
-                    medicineName,
-                    sellingPrice,
-                    quantity,
-                    expirationDate,
-                    buyingDate,
-                    buyingPrice,
-                    company,
-                  },
-                  index
-                ) => {
-                  const isLast = index === tableData.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+            {tableData.length > 0 ? (
+              <tbody>
+                {tableData.map(
+                  (
+                    {
+                      medicineID,
+                      category,
+                      medicineName,
+                      sellingPrice,
+                      quantity,
+                      expirationDate,
+                      buyingDate,
+                      buyingPrice,
+                      company,
+                    },
+                    index
+                  ) => {
+                    const isLast = index === tableData.length - 1;
+                    const classes = isLast
+                      ? "p-2"
+                      : "p-2 border-b border-blue-gray-50";
 
-                  return (
-                    <tr key={medicineID}>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {medicineID}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {category}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {medicineName}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {sellingPrice}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {quantity}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {expirationDate}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {buyingDate}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {buyingPrice}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {company}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Tooltip content="Edit User">
-                          <IconButton variant="text">
-                            <PencilIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
+                    return (
+                      <tr key={medicineID}>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {medicineID}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {category}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {medicineName}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {sellingPrice}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {quantity}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {expirationDate}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {buyingDate}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {buyingPrice}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {company}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Tooltip content="Edit User">
+                            <IconButton variant="text">
+                              <PencilIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            ) : (
+              <tbody className="text-center text-blue-gray-500 p-4">
+                <tr><td >No medicines found.</td></tr>
+              </tbody>
+            )}
           </table>
         </CardBody>
+
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Typography variant="small" color="blue-gray" className="font-normal">
             Page 1 of 10
@@ -271,7 +298,11 @@ export function MedicineTable() {
           </div>
         </CardFooter>
       </Card>
-      <AddMedicine open={open} closeDrawer={closeDrawer}/>
+      <AddMedicine
+        open={open}
+        closeDrawer={closeDrawer}
+        updateTable={medicineAdded}
+      />
     </>
   );
 }

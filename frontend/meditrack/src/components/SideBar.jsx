@@ -4,8 +4,8 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
+  // ListItemSuffix,
+  // Chip,
 } from "@material-tailwind/react";
 import {
   PresentationChartBarIcon,
@@ -31,28 +31,31 @@ export default function SideBar() {
           <ListItemPrefix>
             <PresentationChartBarIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Dashboard
+          Medicine
         </ListItem>
         <ListItem>
           <ListItemPrefix>
             <ShoppingBagIcon className="h-5 w-5" />
           </ListItemPrefix>
-          E-Commerce
+          Company
         </ListItem>
         <ListItem>
           <ListItemPrefix>
-            <InboxIcon className="h-5 w-5" />
+          <UserCircleIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Inbox
-          {/* <ListItemSuffix>
-              <Chip value="14" size="sm" variant="ghost" color="blue-gray" className="rounded-full" />
-            </ListItemSuffix> */}
+          Customer
         </ListItem>
         <ListItem>
           <ListItemPrefix>
-            <UserCircleIcon className="h-5 w-5" />
+          <PresentationChartBarIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Profile
+          Sell
+        </ListItem>
+        <ListItem>
+          <ListItemPrefix>
+          <ShoppingBagIcon className="h-5 w-5" />
+          </ListItemPrefix>
+          Buy
         </ListItem>
         <ListItem>
           <ListItemPrefix>

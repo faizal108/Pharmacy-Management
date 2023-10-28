@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 @Service
 public class MedicineServiceImpl implements MedicineService {
 
@@ -23,7 +25,7 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public Medicine addMedicine(Medicine medicine) {
 
-        Company company = companyRepository.findById(medicine.getCompany().getCompanyID()).orElse(null);
+        Company company = companyRepository.findById((long) (medicine.getCompany().getCompanyID())).orElse(null);
         if(company == null){
             throw new EntityNotFoundException("Company Not Found");
         }
