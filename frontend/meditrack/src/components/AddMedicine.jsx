@@ -66,7 +66,7 @@ export default function AddMedicine({ open, closeDrawer, updateTable }) {
 
   return (
     <>
-      <Drawer open={open} onClose={closeDrawer}>
+      <Drawer open={open} onClose={closeDrawer} className="z-[9998]	">
         <ToastContainer />
         <div className="flex items-center justify-between px-4 pb-2">
           <Typography variant="h5" color="blue-gray">

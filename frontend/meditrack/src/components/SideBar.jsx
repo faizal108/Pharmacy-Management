@@ -14,6 +14,10 @@ import {
   Cog6ToothIcon,
   InboxIcon,
   PowerIcon,
+  GiMedicines,
+  CgOrganisation,
+  BsFillPeopleFill,
+  
 } from "@heroicons/react/24/solid";
 
 export default function SideBar() {

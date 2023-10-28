@@ -56,7 +56,7 @@ const TABLE_HEAD = [
   "",
 ];
 
-export function MedicineTable() {
+export default function MedicineTable() {
   const [tableData, setTableData] = useState([]);
   const [open, setOpen] = useState(false);
   const openDrawer = () => setOpen(true);
@@ -87,11 +87,11 @@ export function MedicineTable() {
 
   return (
     <>
-      <Card className="h-full w-11/12">
+      <Card className="h-full w-full py-3">
         <CardHeader
           floated={false}
           shadow={false}
-          className="relative  h-48 bg-clip-border bg-white text-gray-700 rounded-none m-0 p-4"
+          className="relative h-40 bg-clip-border bg-white text-gray-700 rounded-none m-0 p-4"
         >
           <div className="mb-8 flex items-center justify-between gap-8">
             <div>
@@ -133,7 +133,7 @@ export function MedicineTable() {
             </div>
           </div>
         </CardHeader>
-        <CardBody className="overflow-scroll p-0 my-3 no-scrollbar">
+        <CardBody className="overflow-scroll h-[440px] p-0 my-3 no-scrollbar">
           <table className="w-full min-w-max table-auto text-left">
             <thead className="sticky top-0">
               <tr>

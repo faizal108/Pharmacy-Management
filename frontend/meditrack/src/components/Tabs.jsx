@@ -1,64 +1,100 @@
+import React, { createElement } from "react";
 import {
-    Tabs,
-    TabsHeader,
-    TabsBody,
-    Tab,
-    TabPanel,
-  } from "@material-tailwind/react";
-   
-  export default function Tabs() {
-    const data = [
-      {
-        label: "HTML",
-        value: "html",
-        desc: `It really matters and then like it really doesn't matter.
-        What matters is the people who are sparked by it. And the people
-        who are like offended by it, it doesn't matter.`,
-      },
-      {
-        label: "React",
-        value: "react",
-        desc: `Because it's about motivating the doers. Because I'm here
-        to follow my dreams and inspire other people to follow their dreams, too.`,
-      },
-      {
-        label: "Vue",
-        value: "vue",
-        desc: `We're not always in the position that we want to be at.
-        We're constantly growing. We're constantly making mistakes. We're
-        constantly trying to express ourselves and actualize our dreams.`,
-      },
-      {
-        label: "Angular",
-        value: "angular",
-        desc: `Because it's about motivating the doers. Because I'm here
-        to follow my dreams and inspire other people to follow their dreams, too.`,
-      },
-      {
-        label: "Svelte",
-        value: "svelte",
-        desc: `We're not always in the position that we want to be at.
-        We're constantly growing. We're constantly making mistakes. We're
-        constantly trying to express ourselves and actualize our dreams.`,
-      },
-    ];
-   
-    return (
-      <Tabs value="html" orientation="vertical">
-        <TabsHeader className="w-32">
-          {data.map(({ label, value }) => (
-            <Tab key={value} value={value}>
-              {label}
+  Tabs,
+  TabsHeader,
+  TabsBody,
+  Tab,
+  Typography,
+  TabPanel,
+} from "@material-tailwind/react";
+import {
+  PresentationChartBarIcon,
+  ShoppingBagIcon,
+  UserCircleIcon,
+  Cog6ToothIcon,
+  InboxIcon,
+  PowerIcon,
+} from "@heroicons/react/24/solid";
+import MedicineTable from "./MedicineTable";
+import SideBar from "./SideBar";
+
+export default function MultiTabs() {
+  const data = [
+    {
+      label: "Medicine",
+      value: "medicine",
+      icon: InboxIcon,
+      component: MedicineTable,
+    },
+    {
+      label: "Customer",
+      value: "customer",
+      icon: InboxIcon,
+      component: SideBar,
+    },
+    {
+      label: "Company",
+      value: "company",
+      icon: InboxIcon,
+      component: MedicineTable,
+    },
+    {
+      label: "Sell",
+      value: "sell",
+      icon: PresentationChartBarIcon,
+      component: SideBar,
+    },
+    {
+      label: "Buy",
+      value: "buy",
+      icon: ShoppingBagIcon,
+      component: MedicineTable,
+    },
+    {
+      label: "Settings",
+      value: "settings",
+      icon: Cog6ToothIcon,
+      component: SideBar,
+    },
+    {
+      label: "Logout",
+      value: "logout",
+      icon: PowerIcon,
+      component: MedicineTable,
+    },
+  ];
+
+  return (
+    <Tabs value="medicine" orientation="vertical" className="w-screen h-screen">
+      <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 w-2/12 p-4 shadow-xl shadow-blue-gray-900/5 z-[0]">
+        <div className="mb-2 flex items-center gap-4 p-4">
+          <img
+            src="https://ik.imagekit.io/pibjyepn7p9/Lilac_Navy_Simple_Line_Business_Logo_CGktk8RHK.png?ik-sdk-version=javascript-1.4.3&updatedAt=1649962071315"
+            alt="brand"
+            className="h-8 w-8"
+          />
+          <Typography variant="h5" color="blue-gray">
+            Meditrack
+          </Typography>
+        </div>
+        <TabsHeader className="">
+          {data.map(({ label, value, icon }) => (
+            <Tab key={value} value={value} className="justify-start">
+              <div className="w-full flex h-full gap-x-6 my-2 items-center">
+                {createElement(icon, { className: "h-5 w-5" })}
+                <p className="">{label}</p>
+              </div>
             </Tab>
           ))}
         </TabsHeader>
-        <TabsBody>
-          {data.map(({ value, desc }) => (
-            <TabPanel key={value} value={value} className="py-0">
-              {desc}
-            </TabPanel>
-          ))}
-        </TabsBody>
-      </Tabs>
-    );
-  }
+      </div>
+      <TabsBody>
+        {data.map(({ value, component, desc }) => (
+          <TabPanel key={value} value={value} className="py-0">
+            {component()}
+          </TabPanel>
+        ))}
+      </TabsBody>
+    </Tabs>
+  );
+}
