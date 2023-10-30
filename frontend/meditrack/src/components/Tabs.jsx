@@ -15,6 +15,10 @@ import {
   InboxIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import { HiCube } from "react-icons/hi";
+import { CgOrganisation } from "react-icons/cg";
+import { BsPeopleFill } from "react-icons/bs";
+
 import MedicineTable from "./MedicineTable";
 import SideBar from "./SideBar";
 
@@ -23,19 +27,19 @@ export default function MultiTabs() {
     {
       label: "Medicine",
       value: "medicine",
-      icon: InboxIcon,
+      icon: HiCube,
       component: MedicineTable,
     },
     {
       label: "Customer",
       value: "customer",
-      icon: InboxIcon,
+      icon: BsPeopleFill,
       component: SideBar,
     },
     {
       label: "Company",
       value: "company",
-      icon: InboxIcon,
+      icon: CgOrganisation,
       component: MedicineTable,
     },
     {

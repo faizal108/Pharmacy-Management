@@ -24,25 +24,6 @@ import {
 
 import AddMedicine from "./AddMedicine";
 
-const TABS = [
-  {
-    label: "All",
-    value: "all",
-  },
-  {
-    label: "Low Stock",
-    value: "low stock",
-  },
-  {
-    label: "Expired",
-    value: "expired",
-  },
-  {
-    label: "Expired In Month",
-    value: "expired in month",
-  },
-];
-
 const TABLE_HEAD = [
   "medicineID",
   "category",
@@ -68,6 +49,84 @@ export default function MedicineTable() {
     ];
     setTableData(updatedData);
   };
+  const allMedicines = () => {
+    axios
+      .get("http://localhost:8080/api/medicines")
+      .then((response) => {
+        const modifiedData = response.data.map((item) => ({
+          ...item,
+          company: item.company.companyName,
+        }));
+        setTableData(modifiedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  const lowStockMedicines = () => {
+    axios
+      .get("http://localhost:8080/api/medicines/low-stock-medicines")
+      .then((response) => {
+        const modifiedData = response.data.map((item) => ({
+          ...item,
+          company: item.company.companyName,
+        }));
+        setTableData(modifiedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  const expiredMedicines = () => {
+    axios
+      .get("http://localhost:8080/api/medicines/expired")
+      .then((response) => {
+        const modifiedData = response.data.map((item) => ({
+          ...item,
+          company: item.company.companyName,
+        }));
+        setTableData(modifiedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  const expiredInMonthMedicines = () => {
+    axios
+      .get("http://localhost:8080/api/medicines/expire-in-month")
+      .then((response) => {
+        const modifiedData = response.data.map((item) => ({
+          ...item,
+          company: item.company.companyName,
+        }));
+        setTableData(modifiedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  const TABS = [
+    {
+      label: "All",
+      value: "all",
+      callFun: allMedicines,
+    },
+    {
+      label: "Low Stock",
+      value: "low stock",
+      callFun: lowStockMedicines,
+    },
+    {
+      label: "Expired",
+      value: "expired",
+      callFun: expiredMedicines,
+    },
+    {
+      label: "Expired In Month",
+      value: "expired in month",
+      callFun: expiredInMonthMedicines,
+    },
+  ];
 
   useEffect(() => {
     console.log("table-data : " + tableData.length);
@@ -103,9 +162,9 @@ export default function MedicineTable() {
               </Typography>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              <Button variant="outlined" size="sm">
+              {/* <Button variant="outlined" size="sm">
                 view all
-              </Button>
+              </Button> */}
               <Button
                 className="flex items-center gap-3"
                 size="sm"
@@ -118,13 +177,19 @@ export default function MedicineTable() {
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <Tabs value="all" className="w-full md:w-max">
               <TabsHeader>
-                {TABS.map(({ label, value }) => (
-                  <Tab key={value} value={value} className="w-fit">
+                {TABS.map(({ label, value, callFun }) => (
+                  <Tab
+                    key={value}
+                    value={value}
+                    className="w-fit"
+                    onClick={callFun}
+                  >
                     &nbsp;&nbsp;{label}&nbsp;&nbsp;
                   </Tab>
                 ))}
               </TabsHeader>
-            </Tabs>
+            </Tabs>s
+            {/* this is search bar */}
             <div className="w-full md:w-72">
               <Input
                 label="Search"
@@ -278,7 +343,9 @@ export default function MedicineTable() {
               </tbody>
             ) : (
               <tbody className="text-center text-blue-gray-500 p-4">
-                <tr><td >No medicines found.</td></tr>
+                <tr>
+                  <td>No medicines found.</td>
+                </tr>
               </tbody>
             )}
           </table>
