@@ -6,59 +6,59 @@ import {
   Typography,
   IconButton,
   Input,
-  PlusIcon,
+  Textarea,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddCompany from "./AddCompany";
 
-export default function AddMedicine({ open, closeDrawer, updateTable }) {
+export default function AddSell({ open, closeDrawer, updateTable }) {
   const formDataRef = useRef({
-    medicineName: "",
-    category: "",
-    quantity: 0,
-    buyingPrice: 0,
-    sellingPrice: 0,
-    expirationDate: "",
-    company: {
-      companyID: 0,
+    customer: {
+      name: "",
+      gender: "",
+      phone: "",
     },
+    medicine: {
+      medicineID: 0,
+    },
+    quantity: 0,
   });
-
-  const [openCom, setOpenCom] = useState(false);
-  const [companies, setCompanies] = useState([]); // Store the fetched companies here
-
-  // Fetch the companies data when the component mounts
+  const [medicines, setMedicines] = useState([]); // Store the fetched medicines here
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/company")
+      .get("http://localhost:8080/api/medicines")
       .then((response) => {
-        setCompanies(response.data);
+        setMedicines(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching companies:", error);
+        console.error("Error fetching medicines:", error);
       });
   }, []);
 
-  const openDrawerCom = () => setOpenCom(true);
-  const closeDrawerCom = () => setOpenCom(false);
-  const companyAdded = (cmp) => {
-    // You can update the companies data or take any other action here if needed.
-  };
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    if (name === "company") {
-      formDataRef.current[name] = { companyID: value };
+    // Split the name by '.' to handle nested objects
+    const nameParts = name.split(".");
+    const topProperty = nameParts[0];
+    const subProperty = nameParts[1];
+
+    if (topProperty === "customer") {
+      formDataRef.current.customer[subProperty] = value;
+    } else if (topProperty === "medicine") {
+      formDataRef.current.medicine[subProperty] = value;
     } else {
-      formDataRef.current[name] = value;
+      formDataRef.current[topProperty] = value;
     }
+    console.log(name + " : " + value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(formDataRef.current);
     axios
-      .post("http://localhost:8080/api/medicines/add", formDataRef.current)
+      .post("http://localhost:8080/api/sell/add", formDataRef.current)
       .then((response) => {
         console.log("Data posted successfully", response.data);
         updateTable(response.data);
@@ -76,11 +76,11 @@ export default function AddMedicine({ open, closeDrawer, updateTable }) {
 
   return (
     <>
-      <Drawer open={open} onClose={closeDrawer} className="z-[9998]	">
+      <Drawer placement="left" open={open} onClose={closeDrawer}>
         <ToastContainer />
         <div className="flex items-center justify-between px-4 pb-2">
           <Typography variant="h5" color="blue-gray">
-            Add Medicine
+            Add Sell
           </Typography>
           <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
             <svg
@@ -101,74 +101,59 @@ export default function AddMedicine({ open, closeDrawer, updateTable }) {
         </div>
         <div className="mb-5 px-4">
           <Typography variant="small" color="gray" className="font-normal ">
-            Fill the medicine details.
+            Fill the sell details.
           </Typography>
         </div>
         <form className="flex flex-col gap-6 p-4" onSubmit={handleSubmit}>
           <Input
             type="text"
-            label="Medicine Name"
-            name="medicineName"
+            label="Customer Name"
+            name="customer.name"
+            //  value={formData.medicineName}
             onChange={handleInputChange}
           />
 
+          <select
+            name="customer.gender"
+            className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal text-left outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all border text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200"
+            onChange={handleInputChange}
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
           <Input
-            type="text"
-            label="Category"
-            name="category"
+            type="number"
+            label="Phone"
+            name="customer.phone"
+            // value={formData.quantity}
             onChange={handleInputChange}
           />
+
+          <select
+            name="medicine.medicineID"
+            className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal text-left outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all border text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200"
+            onChange={handleInputChange}
+          >
+            <option value={0}>Select Medicine</option>
+            {medicines.map((medicine) => (
+              <option key={medicine.medicineID} value={medicine.medicineID}>
+                {medicine.medicineName}
+              </option>
+            ))}
+          </select>
 
           <Input
             type="number"
             label="Quantity"
             name="quantity"
+            // value={formData.quantity}
             onChange={handleInputChange}
           />
 
-          <Input
-            type="text"
-            label="Buying Price"
-            name="buyingPrice"
-            onChange={handleInputChange}
-          />
-
-          <Input
-            type="text"
-            label="Selling Price"
-            name="sellingPrice"
-            onChange={handleInputChange}
-          />
-
-          <Input
-            type="date"
-            label="Expiration Date"
-            name="expirationDate"
-            onChange={handleInputChange}
-          />
-          <select
-            name="company"
-            className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal text-left outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all border text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200"
-            onChange={handleInputChange}
-          >
-            <option value={0}>Select Company</option>
-            {companies.map((company) => (
-              <option key={company.companyID} value={company.companyID}>
-                {company.companyName}
-              </option>
-            ))}
-          </select>
           <Button type="submit">Submit</Button>
         </form>
-        <Button
-          className="flex items-center mx-4 gap-3"
-          size="sm"
-          onClick={openDrawerCom}
-        >
-          Add Company
-        </Button>
       </Drawer>
-      <AddCompany open={openCom} closeDrawer={closeDrawerCom} updateTable={companyAdded} />
     </>
   );
 }

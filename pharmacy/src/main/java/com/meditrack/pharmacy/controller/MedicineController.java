@@ -15,7 +15,7 @@ public class MedicineController {
     @Autowired
     private MedicineService medicineService;
 
-    private int threshold = 100;
+    private int threshold = 160;
 
     public int getThreshold() {
         return threshold;

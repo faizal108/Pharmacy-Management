@@ -21,6 +21,8 @@ import { BsPeopleFill } from "react-icons/bs";
 
 import MedicineTable from "./MedicineTable";
 import SideBar from "./SideBar";
+import CompanyTable from "./CompanyTable";
+import SellTable from "./SellTable";
 
 export default function MultiTabs() {
   const data = [
@@ -34,19 +36,19 @@ export default function MultiTabs() {
       label: "Customer",
       value: "customer",
       icon: BsPeopleFill,
-      component: SideBar,
+      component: MedicineTable,
     },
     {
       label: "Company",
       value: "company",
       icon: CgOrganisation,
-      component: MedicineTable,
+      component: CompanyTable,
     },
     {
       label: "Sell",
       value: "sell",
       icon: PresentationChartBarIcon,
-      component: SideBar,
+      component: SellTable,
     },
     {
       label: "Buy",
@@ -58,7 +60,7 @@ export default function MultiTabs() {
       label: "Settings",
       value: "settings",
       icon: Cog6ToothIcon,
-      component: SideBar,
+      component: CompanyTable,
     },
     {
       label: "Logout",

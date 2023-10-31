@@ -16,14 +16,10 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function AddCompany({ open, closeDrawer, updateTable }) {
   const formDataRef = useRef({
     medicineName: "",
-    category: "",
-    quantity: 0,
-    buyingPrice: 0,
-    sellingPrice: 0,
-    expirationDate: "",
-    company: {
-      companyID: 0
-    },
+    phone: "",
+    email: "",
+    address: "",
+    status: "",
   });
 
   const handleInputChange = (event) => {
@@ -33,11 +29,12 @@ export default function AddCompany({ open, closeDrawer, updateTable }) {
     } else {
       formDataRef.current[name] = value;
     }
+    console.log(name + " : "+ value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post("http://localhost:8080/api/medicines/add", formDataRef.current)
+    axios.post("http://localhost:8080/api/company/add", formDataRef.current)
       .then((response) => {
         console.log("Data posted successfully", response.data);
         updateTable(response.data)
@@ -59,7 +56,7 @@ export default function AddCompany({ open, closeDrawer, updateTable }) {
       <ToastContainer />
         <div className="flex items-center justify-between px-4 pb-2">
           <Typography variant="h5" color="blue-gray">
-            Add Medicine
+            Add Company
           </Typography>
           <IconButton variant="text" color="blue-gray" onClick={closeDrawer}>
             <svg
@@ -80,71 +77,52 @@ export default function AddCompany({ open, closeDrawer, updateTable }) {
         </div>
         <div className="mb-5 px-4">
           <Typography variant="small" color="gray" className="font-normal ">
-            Fill the medicine details.
+            Fill the company details.
           </Typography>
         </div>
         <form className="flex flex-col gap-6 p-4" onSubmit={handleSubmit}>
           <Input
             type="text"
-            label="Medicine Name"
-            name="medicineName"
+            label="Company Name"
+            name="companyName"
             //  value={formData.medicineName}
             onChange={handleInputChange}
           />
 
-          <select
-            name="category"
-            className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal text-left outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all border text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200"
-            onChange={handleInputChange}
-          >
-            <option default>
-              select Category
-            </option>
-            <option value="Fever">Fever</option>
-            <option value="Allergy">Allerge</option>
-          </select>
 
           <Input
             type="number"
-            label="quantity"
-            name="quantity"
+            label="Phone"
+            name="phone"
             // value={formData.quantity}
             onChange={handleInputChange}
           />
 
           <Input
-            type="text"
-            label="buyingPrice"
-            name="buyingPrice"
+            type="email"
+            label="Email"
+            name="email"
             // value={formData.buyingPrice}
             onChange={handleInputChange}
           />
 
           <Input
             type="text"
-            label="sellingPrice"
-            name="sellingPrice"
+            label="Address"
+            name="address"
             // value={formData.sellingPrice}
             onChange={handleInputChange}
           />
-
-          <Input
-            type="date"
-            label="expirationDate"
-            name="expirationDate"
-            //  value={formData.expirationDate}
-            onChange={handleInputChange}
-          />
           <select
-            name="company"
+            name="status"
             className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal text-left outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all border text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200"
             onChange={handleInputChange}
           >
-            <option default>
-              select Category
+            <option value="">
+              select status
             </option>
-            <option value="1">macroOrg</option>
-            <option value="2">MicroChip</option>
+            <option value="Active">Active</option>
+            <option value="Deactive">Deactive</option>
           </select>
           <Button type="submit">Submit</Button>
         </form>

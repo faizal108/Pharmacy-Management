@@ -22,38 +22,37 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 
-import AddMedicine from "./AddMedicine";
+import AddCompany from "./AddCompany";
 
 const TABLE_HEAD = [
-  "medicineID",
-  "category",
-  "medicineName",
-  "sellingPrice",
-  "quantity",
-  "expirationDate",
-  "buyingDate",
-  "buyingPrice",
-  "company",
+  "companyID",
+  "companyName",
+  "phone",
+  "email",
+  "address",
+  "status",
+  "creationDate",
+  "modifiedDate",
   "",
 ];
 
-export default function MedicineTable() {
+export default function CompanyTable() {
   const [tableData, setTableData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
   const [open, setOpen] = useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
-  const medicineAdded = (med) => {
+  const companyAdded = (comp) => {
     const updatedData = [
       ...tableData,
-      { ...med, company: med.company.companyName },
+        { ...comp },
     ];
     setTableData(updatedData);
   };
-  const allMedicines = () => {
+  const allCompany = () => {
     axios
-      .get("http://localhost:8080/api/medicines")
+      .get("http://localhost:8080/api/company")
       .then((response) => {
         const modifiedData = response.data.map((item) => ({
           ...item,
@@ -65,82 +64,25 @@ export default function MedicineTable() {
         console.error("Error fetching data:", error);
       });
   };
-  const lowStockMedicines = () => {
-    axios
-      .get("http://localhost:8080/api/medicines/low-stock-medicines")
-      .then((response) => {
-        const modifiedData = response.data.map((item) => ({
-          ...item,
-          company: item.company.companyName,
-        }));
-        setTableData(modifiedData);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-  const expiredMedicines = () => {
-    axios
-      .get("http://localhost:8080/api/medicines/expired")
-      .then((response) => {
-        const modifiedData = response.data.map((item) => ({
-          ...item,
-          company: item.company.companyName,
-        }));
-        setTableData(modifiedData);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-  const expiredInMonthMedicines = () => {
-    axios
-      .get("http://localhost:8080/api/medicines/expire-in-month")
-      .then((response) => {
-        const modifiedData = response.data.map((item) => ({
-          ...item,
-          company: item.company.companyName,
-        }));
-        setTableData(modifiedData);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
+
   const TABS = [
     {
       label: "All",
       value: "all",
-      callFun: allMedicines,
-    },
-    {
-      label: "Low Stock",
-      value: "low stock",
-      callFun: lowStockMedicines,
-    },
-    {
-      label: "Expired",
-      value: "expired",
-      callFun: expiredMedicines,
-    },
-    {
-      label: "Expired In Month",
-      value: "expired in month",
-      callFun: expiredInMonthMedicines,
+      callFun: allCompany,
     },
   ];
 
   useEffect(() => {
     console.log("table-data : " + tableData.length);
     axios
-      .get("http://localhost:8080/api/medicines")
+      .get("http://localhost:8080/api/company")
       .then((response) => {
-        const modifiedData = response.data.map((item) => ({
-          ...item,
-          company: item.company.companyName,
-        }));
-        console.log(modifiedData);
-        setTableData(modifiedData);
+        // const modifiedData = response.data.map((item) => ({
+        //   ...item
+        // }));
+        console.log(response.data);
+        setTableData(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -195,10 +137,10 @@ export default function MedicineTable() {
           <div className="mb-8 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
-                Medicines List
+                Companys List
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
-                See information about all medicine.
+                See information about all companys.
               </Typography>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -210,7 +152,7 @@ export default function MedicineTable() {
                 size="sm"
                 onClick={openDrawer}
               >
-                <PlusIcon strokeWidth={2} className="h-4 w-4" /> Add Medicine
+                <PlusIcon strokeWidth={2} className="h-4 w-4" /> Add Company
               </Button>
             </div>
           </div>
@@ -271,15 +213,14 @@ export default function MedicineTable() {
                 {tableData.map(
                   (
                     {
-                      medicineID,
-                      category,
-                      medicineName,
-                      sellingPrice,
-                      quantity,
-                      expirationDate,
-                      buyingDate,
-                      buyingPrice,
-                      company,
+                      companyID,
+                      companyName,
+                      phone,
+                      email,
+                      address,
+                      status,
+                      creationDate,
+                      modifiedDate,
                     },
                     index
                   ) => {
@@ -289,14 +230,14 @@ export default function MedicineTable() {
                       : "p-2 border-b border-blue-gray-50";
 
                     return (
-                      <tr key={medicineID}>
+                      <tr key={companyID}>
                         <td className={classes}>
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {medicineID}
+                            {companyID}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -305,7 +246,7 @@ export default function MedicineTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {category}
+                            {companyName}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -314,7 +255,7 @@ export default function MedicineTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {medicineName}
+                            {phone}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -323,7 +264,7 @@ export default function MedicineTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {sellingPrice}
+                            {email}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -332,7 +273,7 @@ export default function MedicineTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {quantity}
+                            {address}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -341,7 +282,7 @@ export default function MedicineTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {expirationDate}
+                            {status}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -350,7 +291,7 @@ export default function MedicineTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {buyingDate}
+                            {creationDate}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -359,16 +300,7 @@ export default function MedicineTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {buyingPrice}
-                          </Typography>
-                        </td>
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {company}
+                            {modifiedDate}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -386,7 +318,7 @@ export default function MedicineTable() {
             ) : (
               <tbody className="text-center text-blue-gray-500 p-4">
                 <tr>
-                  <td>No medicines found.</td>
+                  <td>No Company Found!</td>
                 </tr>
               </tbody>
             )}
@@ -407,10 +339,10 @@ export default function MedicineTable() {
           </div>
         </CardFooter>
       </Card>
-      <AddMedicine
+      <AddCompany
         open={open}
         closeDrawer={closeDrawer}
-        updateTable={medicineAdded}
+        updateTable={companyAdded}
       />
     </>
   );
