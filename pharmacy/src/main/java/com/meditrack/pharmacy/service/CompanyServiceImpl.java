@@ -55,5 +55,15 @@ public class CompanyServiceImpl implements CompanyService {
         }
         return false;
     }
+
+    @Override
+    public List<Company> getAllActiveCompany() {
+        return companyRepository.findAllCompanyByStatus("Active");
+    }
+
+    @Override
+    public List<Company> getAllDeactiveCompany() {
+        return companyRepository.findAllCompanyByStatus("Deactive");
+    }
 }
 

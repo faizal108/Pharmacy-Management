@@ -12,17 +12,14 @@ import {
   Typography,
   Button,
   CardBody,
-  Chip,
   CardFooter,
   Tabs,
   TabsHeader,
   Tab,
-  Avatar,
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-
-import AddCompany from "./AddCompany";
+import { retrieveToken } from "../constants/token";
 import AddSell from "./AddSell";
 
 const TABLE_HEAD = [
@@ -36,6 +33,8 @@ const TABLE_HEAD = [
 ];
 
 export default function SellTable() {
+  const token = retrieveToken();
+
   const [tableData, setTableData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
@@ -46,35 +45,13 @@ export default function SellTable() {
     const updatedData = [...tableData, { ...sell }];
     setTableData(updatedData);
   };
-  const addSell = () => {
+  const allSell = () => {
     axios
-      .get("http://localhost:8080/api/sell")
-      .then((response) => {
-        const modifiedData = response.data.map((item) => ({
-          ...item,
-          customer: item.customer.name,
-          medicine: item.medicine.medicineName,
-        }));
-        console.log(modifiedData);
-        setTableData(modifiedData);
+      .get("http://localhost:8080/api/sell/getall",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
-
-  const TABS = [
-    {
-      label: "All",
-      value: "all",
-      callFun: addSell,
-    },
-  ];
-
-  useEffect(() => {
-    console.log("table-data : " + tableData.length);
-    axios
-      .get("http://localhost:8080/api/sell/getall")
       .then((response) => {
         const modifiedData = response.data.map((item) => ({
           ...item,
@@ -82,7 +59,36 @@ export default function SellTable() {
           medicine: item.medicine.medicineName
         }));
         setTableData(modifiedData);
-        console.log(modifiedData);
+        //console.log(modifiedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
+  const TABS = [
+    {
+      label: "All",
+      value: "all",
+      callFun: allSell,
+    },
+  ];
+
+  useEffect(() => {
+    //console.log("table-data : " + tableData.length);
+    axios
+      .get("http://localhost:8080/api/sell/getall",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const modifiedData = response.data.map((item) => ({
+          ...item,
+          customer: item.customer.name,
+          medicine: item.medicine.medicineName
+        }));
+        setTableData(modifiedData);
+        //console.log(modifiedData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -90,8 +96,24 @@ export default function SellTable() {
   }, []);
 
   const handleSearchInputChange = (event) => {
-    setSearchValue(event.target.value);
-    console.log(event.target.value);
+    const inputValue = event.target.value;
+    setSearchValue(inputValue);
+
+    // If the search input is empty, revert to the original data
+    if (inputValue.trim() === '') {
+      // Fetch all sells
+      allSell();
+    } else {
+      // Filter the entire dataset based on customerName and medicineName
+      const filteredData = tableData.filter((sell) =>
+        sell.customer.toLowerCase().includes(inputValue.toLowerCase()) ||
+        sell.medicine.toLowerCase().includes(inputValue.toLowerCase()) ||
+        sell.date.toLowerCase().includes(inputValue.toLowerCase())
+      );
+
+      // Set the filtered data to update the table
+      setTableData(filteredData);
+    }
   };
 
   return (
@@ -266,19 +288,6 @@ export default function SellTable() {
           </table>
         </CardBody>
 
-        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-          <Typography variant="small" color="blue-gray" className="font-normal">
-            Page 1 of 10
-          </Typography>
-          <div className="flex gap-2">
-            <Button variant="outlined" size="sm">
-              Previous
-            </Button>
-            <Button variant="outlined" size="sm">
-              Next
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
       <AddSell open={open} closeDrawer={closeDrawer} updateTable={sellAdded} />
     </>

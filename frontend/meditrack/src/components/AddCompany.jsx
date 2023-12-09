@@ -12,8 +12,11 @@ import {
 } from "@material-tailwind/react";
 import { toast,ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { retrieveToken } from "../constants/token";
 
 export default function AddCompany({ open, closeDrawer, updateTable }) {
+  const token = retrieveToken();
+
   const formDataRef = useRef({
     medicineName: "",
     phone: "",
@@ -29,14 +32,18 @@ export default function AddCompany({ open, closeDrawer, updateTable }) {
     } else {
       formDataRef.current[name] = value;
     }
-    console.log(name + " : "+ value);
+    //console.log(name + " : "+ value);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post("http://localhost:8080/api/company/add", formDataRef.current)
+    axios.post("http://localhost:8080/api/company/add", formDataRef.current, {
+      headers : {
+        Authorization : `Bearer ${token}`
+      }
+    })
       .then((response) => {
-        console.log("Data posted successfully", response.data);
+        //console.log("Data posted successfully", response.data);
         updateTable(response.data)
         toast.success("Adding Successful", {
           position: "top-center",
@@ -46,8 +53,8 @@ export default function AddCompany({ open, closeDrawer, updateTable }) {
       .catch((error) => {
         console.error("Error posting data:", error);
       });
-    console.log(formDataRef.current);
-    console.log(formDataRef);
+    //console.log(formDataRef.current);
+    //console.log(formDataRef);
   };
 
   return (

@@ -11,8 +11,11 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddCompany from "./AddCompany";
+import { retrieveToken } from "../constants/token";
 
 export default function AddMedicine({ open, closeDrawer, updateTable }) {
+  const token = retrieveToken();
+
   const formDataRef = useRef({
     medicineName: "",
     category: "",
@@ -31,7 +34,11 @@ export default function AddMedicine({ open, closeDrawer, updateTable }) {
   // Fetch the companies data when the component mounts
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/company")
+      .get("http://localhost:8080/api/company", {
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      })
       .then((response) => {
         setCompanies(response.data);
       })
@@ -58,9 +65,13 @@ export default function AddMedicine({ open, closeDrawer, updateTable }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post("http://localhost:8080/api/medicines/add", formDataRef.current)
+      .post("http://localhost:8080/api/medicines/add", formDataRef.current, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      })
       .then((response) => {
-        console.log("Data posted successfully", response.data);
+        //console.log("Data posted successfully", response.data);
         updateTable(response.data);
         toast.success("Adding Successful", {
           position: "top-center",
@@ -70,8 +81,8 @@ export default function AddMedicine({ open, closeDrawer, updateTable }) {
       .catch((error) => {
         console.error("Error posting data:", error);
       });
-    console.log(formDataRef.current);
-    console.log(formDataRef);
+    //console.log(formDataRef.current);
+    //console.log(formDataRef);
   };
 
   return (

@@ -12,8 +12,11 @@ import {
 } from "@material-tailwind/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { retrieveToken } from "../constants/token";
 
 export default function AddSell({ open, closeDrawer, updateTable }) {
+  const token = retrieveToken();
+
   const formDataRef = useRef({
     customer: {
       name: "",
@@ -28,7 +31,11 @@ export default function AddSell({ open, closeDrawer, updateTable }) {
   const [medicines, setMedicines] = useState([]); // Store the fetched medicines here
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/medicines")
+      .get("http://localhost:8080/api/medicines",{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      })
       .then((response) => {
         setMedicines(response.data);
       })
@@ -58,7 +65,11 @@ export default function AddSell({ open, closeDrawer, updateTable }) {
     event.preventDefault();
     console.log(formDataRef.current);
     axios
-      .post("http://localhost:8080/api/sell/add", formDataRef.current)
+      .post("http://localhost:8080/api/sell/add", formDataRef.current, {
+        headers : {
+          Authorization : `Bearer ${token}`,
+        }
+      })
       .then((response) => {
         console.log("Data posted successfully", response.data);
         updateTable(response.data);

@@ -1,5 +1,6 @@
 package com.meditrack.pharmacy.auth;
 
+import com.meditrack.pharmacy.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
 
-    private String firstname;
-    private String lastname;
+    private String username;
     private String email;
     private String password;
+    private String role;
 }

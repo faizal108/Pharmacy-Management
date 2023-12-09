@@ -14,17 +14,19 @@ import {
   Cog6ToothIcon,
   InboxIcon,
   PowerIcon,
+  TrashIcon
 } from "@heroicons/react/24/solid";
 import { HiCube } from "react-icons/hi";
 import { CgOrganisation } from "react-icons/cg";
 import { BsPeopleFill } from "react-icons/bs";
-
 import MedicineTable from "./MedicineTable";
-import SideBar from "./SideBar";
 import CompanyTable from "./CompanyTable";
 import SellTable from "./SellTable";
+import CustomerTable from "./CustomerTable";
+import Logout from "./Logout";
 
 export default function MultiTabs() {
+
   const data = [
     {
       label: "Medicine",
@@ -36,7 +38,7 @@ export default function MultiTabs() {
       label: "Customer",
       value: "customer",
       icon: BsPeopleFill,
-      component: MedicineTable,
+      component: CustomerTable,
     },
     {
       label: "Company",
@@ -51,22 +53,10 @@ export default function MultiTabs() {
       component: SellTable,
     },
     {
-      label: "Buy",
-      value: "buy",
-      icon: ShoppingBagIcon,
-      component: MedicineTable,
-    },
-    {
-      label: "Settings",
-      value: "settings",
-      icon: Cog6ToothIcon,
-      component: CompanyTable,
-    },
-    {
       label: "Logout",
       value: "logout",
       icon: PowerIcon,
-      component: MedicineTable,
+      component: Logout,
     },
   ];
 

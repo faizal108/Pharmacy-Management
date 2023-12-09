@@ -4,7 +4,7 @@ import {
   MagnifyingGlassIcon,
   ChevronUpDownIcon,
 } from "@heroicons/react/24/outline";
-import { PencilIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, PlusIcon,TrashIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
@@ -23,6 +23,7 @@ import {
 } from "@material-tailwind/react";
 
 import AddMedicine from "./AddMedicine";
+import { retrieveToken } from "../constants/token";
 
 const TABLE_HEAD = [
   "medicineID",
@@ -38,6 +39,7 @@ const TABLE_HEAD = [
 ];
 
 export default function MedicineTable() {
+  const token = retrieveToken();
   const [tableData, setTableData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
@@ -51,9 +53,29 @@ export default function MedicineTable() {
     ];
     setTableData(updatedData);
   };
-  const allMedicines = () => {
+
+  const deleteMedicine = (id) => {
     axios
-      .get("http://localhost:8080/api/medicines")
+      .delete(`http://localhost:8080/api/medicines/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        allMedicines();
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
+  const allMedicines = () => {
+    //console.log("\n\n\ntoken : "+token);
+    axios
+      .get("http://localhost:8080/api/medicines", {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const modifiedData = response.data.map((item) => ({
           ...item,
@@ -67,7 +89,11 @@ export default function MedicineTable() {
   };
   const lowStockMedicines = () => {
     axios
-      .get("http://localhost:8080/api/medicines/low-stock-medicines")
+      .get("http://localhost:8080/api/medicines/low-stock-medicines",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const modifiedData = response.data.map((item) => ({
           ...item,
@@ -81,7 +107,11 @@ export default function MedicineTable() {
   };
   const expiredMedicines = () => {
     axios
-      .get("http://localhost:8080/api/medicines/expired")
+      .get("http://localhost:8080/api/medicines/expired",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const modifiedData = response.data.map((item) => ({
           ...item,
@@ -95,7 +125,11 @@ export default function MedicineTable() {
   };
   const expiredInMonthMedicines = () => {
     axios
-      .get("http://localhost:8080/api/medicines/expire-in-month")
+      .get("http://localhost:8080/api/medicines/expire-in-month",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const modifiedData = response.data.map((item) => ({
           ...item,
@@ -131,15 +165,19 @@ export default function MedicineTable() {
   ];
 
   useEffect(() => {
-    console.log("table-data : " + tableData.length);
+    //console.log("table-data : " + tableData.length);
     axios
-      .get("http://localhost:8080/api/medicines")
+      .get("http://localhost:8080/api/medicines",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const modifiedData = response.data.map((item) => ({
           ...item,
           company: item.company.companyName,
         }));
-        console.log(modifiedData);
+        //console.log(modifiedData);
         setTableData(modifiedData);
       })
       .catch((error) => {
@@ -148,42 +186,25 @@ export default function MedicineTable() {
   }, []);
 
   const handleSearchInputChange = (event) => {
-    setSearchValue(event.target.value);
-    // const filteredData = tableData.filter((item) => {
-    //   const { medicineID, category, medicineName, company } = item;
-    //   const searchTerm = searchValue.toLowerCase();
-    //   console.log("Search term : "+searchTerm);
-    //   const medicineIDString = String(medicineID);
+    const inputValue = event.target.value;
+    setSearchValue(inputValue);
 
-    //   return (
-    //     medicineIDString.toLowerCase().includes(searchTerm) ||
-    //     category.toLowerCase().includes(searchTerm) ||
-    //     medicineName.toLowerCase().includes(searchTerm) ||
-    //     company.toLowerCase().includes(searchTerm)
-    //   );
-    // });
+    // If the search input is empty, revert to the original data
+    if (inputValue.trim() === '') {
+      allMedicines();
+    } else {
+      // Filter the entire dataset based on multiple fields
+      const filteredData = tableData.filter((medicine) =>
+        medicine.company.toLowerCase().includes(inputValue.toLowerCase()) ||
+        medicine.medicineName.toLowerCase().includes(inputValue.toLowerCase()) ||
+        medicine.category.toLowerCase().includes(inputValue.toLowerCase())
+      );
 
-    // setTableData(filteredData);
-    console.log(event.target.value);
+      // Set the filtered data to update the table
+      setTableData(filteredData);
+    }
   };
-
-  // const filterTableData = () => {
-  //   const filteredData = tableData.filter((item) => {
-  //     const { medicineID, category, medicineName, company } = item;
-  //     const searchTerm = searchValue.toLowerCase();
-  //     console.log("Search term : "+searchTerm);
-  //     const medicineIDString = String(medicineID);
-
-  //     return (
-  //       medicineIDString.toLowerCase().includes(searchTerm) ||
-  //       category.toLowerCase().includes(searchTerm) ||
-  //       medicineName.toLowerCase().includes(searchTerm) ||
-  //       company.toLowerCase().includes(searchTerm)
-  //     );
-  //   });
-
-  //   setTableData(filteredData);
-  // };
+  
   return (
     <>
       <Card className="h-full w-full py-3">
@@ -202,9 +223,6 @@ export default function MedicineTable() {
               </Typography>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              {/* <Button variant="outlined" size="sm">
-                view all
-              </Button> */}
               <Button
                 className="flex items-center gap-3"
                 size="sm"
@@ -372,9 +390,11 @@ export default function MedicineTable() {
                           </Typography>
                         </td>
                         <td className={classes}>
-                          <Tooltip content="Edit User">
+                          <Tooltip content="Edit Medicine">
                             <IconButton variant="text">
-                              <PencilIcon className="h-4 w-4" />
+                              <TrashIcon className="h-4 w-4" onClick={() => {
+                                deleteMedicine(medicineID)
+                              }}/>
                             </IconButton>
                           </Tooltip>
                         </td>
@@ -392,20 +412,6 @@ export default function MedicineTable() {
             )}
           </table>
         </CardBody>
-
-        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-          <Typography variant="small" color="blue-gray" className="font-normal">
-            Page 1 of 10
-          </Typography>
-          <div className="flex gap-2">
-            <Button variant="outlined" size="sm">
-              Previous
-            </Button>
-            <Button variant="outlined" size="sm">
-              Next
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
       <AddMedicine
         open={open}

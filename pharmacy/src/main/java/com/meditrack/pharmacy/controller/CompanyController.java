@@ -30,6 +30,14 @@ public class CompanyController {
         return ResponseEntity.ok(company);
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<List<Company>> getActiveCompany(){
+        return ResponseEntity.ok(companyService.getAllActiveCompany());
+    }
+    @GetMapping("/deactive")
+    public ResponseEntity<List<Company>> getDeactiveCompany(){
+        return ResponseEntity.ok(companyService.getAllDeactiveCompany());
+    }
     @GetMapping
     public ResponseEntity<List<Company>> getCompanys(){
         return ResponseEntity.ok(companyService.getAllCompanys());

@@ -14,5 +14,9 @@ public interface CompanyService {
     Company updateCompany(Long id, Company updateCompany);
 
     boolean deleteCompany(Long id);
+
+    List<Company> getAllActiveCompany();
+
+    List<Company> getAllDeactiveCompany();
 }
 

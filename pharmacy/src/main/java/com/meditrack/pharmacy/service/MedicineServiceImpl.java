@@ -87,5 +87,15 @@ public class MedicineServiceImpl implements MedicineService {
     public List<Medicine> getExpireMedicine() {
         return medicineRepository.findExpireMedicine();
     }
+
+    @Override
+    public Medicine updateStock(Long id, int stock) {
+        Medicine medicine = medicineRepository.findById(id).orElse(null);
+        if(medicine != null){
+            medicine.setQuantity(medicine.getQuantity() + stock);
+            updateMedicine(id, medicine);
+        }
+        return medicine;
+    }
 }
 

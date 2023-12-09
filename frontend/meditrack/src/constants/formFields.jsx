@@ -1,13 +1,13 @@
 const loginFields=[
     {
-        labelText:"Phone",
+        labelText:"Email",
         labelFor:"phone",
-        id:"phone",
-        name:"phone",
-        type:"phone",
-        autoComplete:"phone",
+        id:"email",
+        name:"email",
+        type:"email",
+        autoComplete:"email",
         isRequired:true,
-        placeholder:"Phone"   
+        placeholder:"Email"   
     },
     {
         labelText:"Password",
@@ -43,14 +43,14 @@ const signupFields=[
         placeholder:"Username"   
     },
     {
-        labelText:"Phone",
-        labelFor:"phone",
-        id:"phone",
-        name:"phone",
-        type:"phone",
-        autoComplete:"phone",
+        labelText:"Email",
+        labelFor:"email",
+        id:"email",
+        name:"email",
+        type:"email",
+        autoComplete:"email",
         isRequired:true,
-        placeholder:"Phone"   
+        placeholder:"Email"   
     },
     {
         labelText:"Password",

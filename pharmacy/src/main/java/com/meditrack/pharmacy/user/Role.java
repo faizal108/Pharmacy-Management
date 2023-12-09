@@ -1,6 +1,8 @@
 package com.meditrack.pharmacy.user;
 
 public enum Role {
-    USER,
+    CHEMIST,
+    DOCTOR,
+    PATIENT,
     ADMIN
 }

@@ -15,7 +15,7 @@ public class MedicineController {
     @Autowired
     private MedicineService medicineService;
 
-    private int threshold = 160;
+    private int threshold = 100;
 
     public int getThreshold() {
         return threshold;
@@ -44,6 +44,14 @@ public class MedicineController {
         return ResponseEntity.ok(medicineService.getAllMedicines());
     }
 
+    @PutMapping("/addstock")
+    public ResponseEntity<Medicine> updateStock(@PathVariable Long id, @PathVariable int stock){
+        Medicine medicine = medicineService.updateStock(id,stock);
+        if(medicine == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(medicine);
+    }
     @PutMapping("/{id}")
     public ResponseEntity<Medicine> updateMedicine(@PathVariable Long id,@RequestBody Medicine updatedMedicine){
         Medicine modifiedMedicine = medicineService.updateMedicine(id,updatedMedicine);

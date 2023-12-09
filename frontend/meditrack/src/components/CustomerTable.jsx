@@ -21,69 +21,68 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-
-import AddCompany from "./AddCompany";
-import AddSell from "./AddSell";
+import { retrieveToken } from "../constants/token";
 
 const TABLE_HEAD = [
-  "sellID",
-  "customerName",
-  "medicineName",
-  "quantity",
-  "amount",
-  "date",
+  "customerid",
+  "name",
+  "gender",
+  "phone",
+  "local_date",
+  "modified_date",
   "",
 ];
 
 export default function CustomerTable() {
+  const token = retrieveToken();
   const [tableData, setTableData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
   const [open, setOpen] = useState(false);
   const openDrawer = () => setOpen(true);
-  const closeDrawer = () => setOpen(false);
-  const sellAdded = (sell) => {
-    const updatedData = [...tableData, { ...sell }];
-    setTableData(updatedData);
-  };
-  const addSell = () => {
-    axios
-      .get("http://localhost:8080/api/customers")
-      .then((response) => {
-        const modifiedData = response.data.map((item) => ({
-          ...item,
-          customer: item.customer.name,
-          medicine: item.medicine.medicineName,
-        }));
-        console.log(modifiedData);
-        setTableData(modifiedData);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  };
 
+  
+  const allCustomer = ()=>{
+    axios
+    .get("http://localhost:8080/api/customers",{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+    .then((response) => {
+      //console.log(response.data);
+      const modifiedData = response.data.map((item) => ({
+        ...item
+      }));
+      setTableData(modifiedData);
+      //console.log(modifiedData);
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+    });
+  }
   const TABS = [
     {
       label: "All",
       value: "all",
-      callFun: 
-      ,
+      callFun: allCustomer,
     },
   ];
-
   useEffect(() => {
-    console.log("table-data : " + tableData.length);
+    //console.log("table-data : " + tableData.length);
     axios
-      .get("http://localhost:8080/api/sell/getall")
+      .get("http://localhost:8080/api/customers",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
+        //console.log(response.data);
         const modifiedData = response.data.map((item) => ({
-          ...item,
-          customer: item.customer.name,
-          medicine: item.medicine.medicineName
+          ...item
         }));
         setTableData(modifiedData);
-        console.log(modifiedData);
+        //console.log(modifiedData);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -91,8 +90,22 @@ export default function CustomerTable() {
   }, []);
 
   const handleSearchInputChange = (event) => {
-    setSearchValue(event.target.value);
-    console.log(event.target.value);
+    const inputValue = event.target.value;
+    setSearchValue(inputValue);
+
+    // If the search input is empty, revert to the original data
+    if (inputValue.trim() === '') {
+      allCustomer();
+    } else {
+      // Filter the entire dataset based on name and phone
+      const filteredData = tableData.filter((customer) =>
+        customer.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+        customer.phone.toLowerCase().includes(inputValue.toLowerCase())
+      );
+
+      // Set the filtered data to update the table
+      setTableData(filteredData);
+    }
   };
 
   return (
@@ -106,23 +119,13 @@ export default function CustomerTable() {
           <div className="mb-8 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
-                Sells List
+                Customer List
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
-                See information about all Sells.
+                See information about all Customers.
               </Typography>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              {/* <Button variant="outlined" size="sm">
-                view all
-              </Button> */}
-              <Button
-                className="flex items-center gap-3"
-                size="sm"
-                onClick={openDrawer}
-              >
-                <PlusIcon strokeWidth={2} className="h-4 w-4" /> Add Sell
-              </Button>
             </div>
           </div>
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
@@ -181,7 +184,7 @@ export default function CustomerTable() {
               <tbody>
                 {tableData.map(
                   (
-                    { sellID, customer, medicine, quantity, amount, date },
+                    { customerID, name, gender, phone, localDate, modifiedDate },
                     index
                   ) => {
                     const isLast = index === tableData.length - 1;
@@ -190,14 +193,14 @@ export default function CustomerTable() {
                       : "p-2 border-b border-blue-gray-50";
 
                     return (
-                      <tr key={sellID}>
+                      <tr key={customerID}>
                         <td className={classes}>
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {sellID}
+                            {customerID}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -206,7 +209,7 @@ export default function CustomerTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {customer}
+                            {name}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -215,7 +218,7 @@ export default function CustomerTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {medicine}
+                            {gender}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -224,7 +227,7 @@ export default function CustomerTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {quantity}
+                            {phone}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -233,7 +236,7 @@ export default function CustomerTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {amount}
+                            {localDate}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -242,7 +245,7 @@ export default function CustomerTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {date}
+                            {modifiedDate}
                           </Typography>
                         </td>
                         <td className={classes}>
@@ -266,22 +269,8 @@ export default function CustomerTable() {
             )}
           </table>
         </CardBody>
-
-        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-          <Typography variant="small" color="blue-gray" className="font-normal">
-            Page 1 of 10
-          </Typography>
-          <div className="flex gap-2">
-            <Button variant="outlined" size="sm">
-              Previous
-            </Button>
-            <Button variant="outlined" size="sm">
-              Next
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
-      <AddSell open={open} closeDrawer={closeDrawer} updateTable={sellAdded} />
+
     </>
   );
 }

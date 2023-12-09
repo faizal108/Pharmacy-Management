@@ -21,7 +21,7 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-
+import { retrieveToken } from "../constants/token";
 import AddCompany from "./AddCompany";
 
 const TABLE_HEAD = [
@@ -37,6 +37,8 @@ const TABLE_HEAD = [
 ];
 
 export default function CompanyTable() {
+  const token = retrieveToken();
+
   const [tableData, setTableData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
 
@@ -52,13 +54,41 @@ export default function CompanyTable() {
   };
   const allCompany = () => {
     axios
-      .get("http://localhost:8080/api/company")
+      .get("http://localhost:8080/api/company",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
-        const modifiedData = response.data.map((item) => ({
-          ...item,
-          company: item.company.companyName,
-        }));
-        setTableData(modifiedData);
+        setTableData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  const active = () => {
+    axios
+      .get("http://localhost:8080/api/company/active",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setTableData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  const deactive = () => {
+    axios
+      .get("http://localhost:8080/api/company/deactive",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setTableData(response.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -71,17 +101,31 @@ export default function CompanyTable() {
       value: "all",
       callFun: allCompany,
     },
+    {
+      label: "Active",
+      value: "active",
+      callFun: active
+    },
+    {
+      label: "Deactive",
+      value: "deactive",
+      callFun: deactive
+    }
   ];
 
   useEffect(() => {
-    console.log("table-data : " + tableData.length);
+    //console.log("table-data : " + tableData.length);
     axios
-      .get("http://localhost:8080/api/company")
+      .get("http://localhost:8080/api/company",{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         // const modifiedData = response.data.map((item) => ({
         //   ...item
         // }));
-        console.log(response.data);
+        //console.log(response.data);
         setTableData(response.data);
       })
       .catch((error) => {
@@ -90,42 +134,23 @@ export default function CompanyTable() {
   }, []);
 
   const handleSearchInputChange = (event) => {
-    setSearchValue(event.target.value);
-    // const filteredData = tableData.filter((item) => {
-    //   const { medicineID, category, medicineName, company } = item;
-    //   const searchTerm = searchValue.toLowerCase();
-    //   console.log("Search term : "+searchTerm);
-    //   const medicineIDString = String(medicineID);
+    const inputValue = event.target.value;
+  setSearchValue(inputValue);
 
-    //   return (
-    //     medicineIDString.toLowerCase().includes(searchTerm) ||
-    //     category.toLowerCase().includes(searchTerm) ||
-    //     medicineName.toLowerCase().includes(searchTerm) ||
-    //     company.toLowerCase().includes(searchTerm)
-    //   );
-    // });
+  // If the search input is empty, revert to the original data
+  if (inputValue.trim() === '') {
+    allCompany();
+  } else {
+    // Filter the table data based on the partial match of the search value
+    const filteredData = tableData.filter((company) =>
+      company.companyName.toLowerCase().includes(inputValue.toLowerCase())
+    );
 
-    // setTableData(filteredData);
-    console.log(event.target.value);
+    // Set the filtered data to update the table
+    setTableData(filteredData);
+  }
   };
 
-  // const filterTableData = () => {
-  //   const filteredData = tableData.filter((item) => {
-  //     const { medicineID, category, medicineName, company } = item;
-  //     const searchTerm = searchValue.toLowerCase();
-  //     console.log("Search term : "+searchTerm);
-  //     const medicineIDString = String(medicineID);
-
-  //     return (
-  //       medicineIDString.toLowerCase().includes(searchTerm) ||
-  //       category.toLowerCase().includes(searchTerm) ||
-  //       medicineName.toLowerCase().includes(searchTerm) ||
-  //       company.toLowerCase().includes(searchTerm)
-  //     );
-  //   });
-
-  //   setTableData(filteredData);
-  // };
   return (
     <>
       <Card className="h-full w-full py-3">
@@ -324,20 +349,6 @@ export default function CompanyTable() {
             )}
           </table>
         </CardBody>
-
-        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-          <Typography variant="small" color="blue-gray" className="font-normal">
-            Page 1 of 10
-          </Typography>
-          <div className="flex gap-2">
-            <Button variant="outlined" size="sm">
-              Previous
-            </Button>
-            <Button variant="outlined" size="sm">
-              Next
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
       <AddCompany
         open={open}
