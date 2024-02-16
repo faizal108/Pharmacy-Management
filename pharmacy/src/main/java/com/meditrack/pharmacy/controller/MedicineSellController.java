@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/sell")
+@CrossOrigin
 public class MedicineSellController {
 
     @Autowired

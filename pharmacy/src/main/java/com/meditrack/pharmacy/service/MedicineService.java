@@ -22,4 +22,6 @@ public interface MedicineService {
     List<Medicine> getExipreMedicineByMonth(int month);
 
     List<Medicine> getExpireMedicine();
+
+    Medicine updateStock(Long id, int stock);
 }
